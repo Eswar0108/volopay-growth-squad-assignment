@@ -3,6 +3,9 @@
 ## Overview
 This repository contains my submission for the Volopay Growth Squad Hiring Assignment. The submission covers all 3 tasks as outlined in the challenge document.
 
+- **GitHub Repo:** https://github.com/Eswar0108/volopay-growth-squad-assignment
+- **Live Tool (Task 2):** https://eswar0108.github.io/volopay-growth-squad-assignment/volopay-submission/task-2-ai-tool/index.html
+
 ## Submission Structure
 
 ```
@@ -97,8 +100,16 @@ Built with Claude AI assistance.
 
 ---
 
+## Live Demo (Task 2)
+The Customer 360 Insight Tool is deployed via GitHub Pages:
+👉 **[Open Live Tool](https://eswar0108.github.io/volopay-growth-squad-assignment/volopay-submission/task-2-ai-tool/index.html)**
+
+No installation needed — just open the link in any browser and select a customer.
+
+---
+
 ## Submission Instructions
-1. **Task 1:** Copy `task-1-linkedin-posts.md` to a Google Doc
-2. **Task 2:** Open `index.html` in browser -> take screenshots -> share link to the folder
-3. **Task 3:** Import CSV into Google Sheets, apply formulas & formatting from the guide
-4. Email to: maneeshwar.r@volopay.co, sandeep.juttuga@volopay.co
+1. **Task 1:** Copy `volopay-submission/task-1-linkedin-posts.md` to a Google Doc or view on [GitHub](https://github.com/Eswar0108/volopay-growth-squad-assignment/blob/master/volopay-submission/task-1-linkedin-posts.md)
+2. **Task 2:** Use the live tool link above (or open `index.html` locally) → take screenshots → include the GitHub Pages URL
+3. **Task 3:** Import `lead_pipeline_data.csv` into Google Sheets, apply formulas & formatting from the guide
+4. Email everything to: **maneeshwar.r@volopay.co**, **sandeep.juttuga@volopay.co**
