@@ -44,13 +44,29 @@
         .status-open { background: #f59e0b; }
         .status-closed { background: #10b981; }
         .status-urgent { background: #ef4444; }
+        .btn-export { background: #059669; color: white; }
+        .ai-badge { position: fixed; bottom: 12px; right: 12px; background: rgba(26,26,46,0.85); color: white; padding: 6px 14px; border-radius: 20px; font-size: 11px; z-index: 999; backdrop-filter: blur(4px); }
+        .ai-badge a { color: #93c5fd; text-decoration: none; }
+        .ai-badge a:hover { text-decoration: underline; }
+        .instructions { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 10px; padding: 16px 20px; margin-bottom: 20px; display: none; }
+        .instructions ol { margin: 8px 0 0 20px; font-size: 13px; color: #374151; line-height: 1.6; }
+        .instructions ol li { margin-bottom: 2px; }
+        .instructions .close-instr { float: right; cursor: pointer; font-size: 18px; color: #6b7280; background: none; border: none; padding: 0 4px; }
+        .instructions .close-instr:hover { color: #374151; }
+        .btn-export:hover { background: #047857; }
+        .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a2e; color: white; padding: 12px 24px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 1000; }
+        .toast.show { opacity: 1; }
+        @media print { .controls, .btn-export, header { display: none; } #customerView { display: grid !important; } }
     </style>
 </head>
 <body>
+    <div class="ai-badge">⚡ Built with <a href="https://claude.ai" target="_blank">Claude AI</a> | <a href="https://github.com/Eswar0108/volopay-growth-squad-assignment" target="_blank">GitHub</a></div>
+
     <div class="container">
         <header>
             <h1>🔍 Customer 360 Insight Tool</h1>
-            <p>Aggregates CRM, Support Ticket, and Email data into a unified customer view with risk signals and next actions</p>
+            <p style="margin-bottom:4px;">Aggregates CRM, Support Ticket, and Email data into a unified customer view with risk signals and next actions</p>
+            <p style="font-size:12px;opacity:0.7;">Volopay Growth Squad Assignment — Task 2</p>
         </header>
 
         <div class="controls">
@@ -59,6 +75,20 @@
                 <option value="">-- Choose a customer --</option>
             </select>
             <span id="customerCount" style="font-size:13px;color:#6b7280;"></span>
+            <button onclick="document.getElementById('instrPanel').style.display='block'" style="background:#4b5563;">❓ How it works</button>
+            <button class="btn-export" id="exportBtn" onclick="exportView()" style="display:none;">📸 Export as PDF</button>
+        </div>
+
+        <div class="instructions" id="instrPanel">
+            <button class="close-instr" onclick="document.getElementById('instrPanel').style.display='none'">✕</button>
+            <strong>How to use this tool:</strong>
+            <ol>
+                <li><strong>Select a customer</strong> from the dropdown above</li>
+                <li>The dashboard shows <strong>CRM data, support tickets, emails, and Slack notes</strong> combined</li>
+                <li><strong>🔴 At Risk</strong> customers need urgent attention</li>
+                <li><strong>🎯 Next Best Action</strong> at the bottom tells you what to do</li>
+                <li>Click <strong>"Export as PDF"</strong> to save the view for reporting</li>
+            </ol>
         </div>
 
         <div class="grid" id="customerView" style="display:none;">
@@ -193,6 +223,7 @@
             }
             document.getElementById('customerView').style.display = 'grid';
             document.getElementById('noSelection').style.display = 'none';
+            document.getElementById('exportBtn').style.display = 'inline-block';
 
             const crm = crmData.find(c => c.name === name);
             const tickets = ticketData.filter(t => t.customerName === name);
@@ -333,6 +364,10 @@
                     <p style="font-size:12px;color:#6b7280;margin-top:4px;"><strong>Why:</strong> ${a.reason}</p>
                 </div>
             `).join('');
+        }
+
+        function exportView() {
+            window.print();
         }
     </script>
 </body>

@@ -38,6 +38,8 @@ Stop treating AP as a processing center. Start treating it as a intelligence cen
 
 *What's one manual process your team spends too much time on? Drop it below.*
 
+**#AP #FinanceAutomation #AccountsPayable #FinanceOps #CFO**
+
 ---
 
 ## Post 2: The Metric That Actually Predicts SaaS Burn
@@ -76,6 +78,8 @@ Your FP&A team doesn't need more reports. They need better signals.
 
 *What's one metric you wish your board tracked?*
 
+**#SaaSFinance #FPandA #CFO #BurnMultiple #StartupFinance**
+
 ---
 
 ## Post 3: The Follow-Up That Closes
@@ -113,6 +117,8 @@ And sometimes the biggest improvement isn't a new tool. It's a new conversation.
 ---
 
 *What's your best tip for getting paid faster?*
+
+**#DSO #RevenueOps #FinanceOps #CashFlow #RevOps**
 
 ---
 
