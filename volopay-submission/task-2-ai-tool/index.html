@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer 360 Insight Tool</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f0f2f5; color: #1a1a2e; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 24px; }
+        header h1 { font-size: 28px; margin-bottom: 6px; }
+        header p { opacity: 0.85; font-size: 14px; }
+        .controls { display: flex; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; align-items: center; }
+        select, button { padding: 10px 18px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 14px; background: white; cursor: pointer; }
+        button { background: #1a1a2e; color: white; border: none; font-weight: 600; }
+        button:hover { background: #16213e; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .card { background: white; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .card h2 { font-size: 16px; font-weight: 600; margin-bottom: 16px; color: #374151; display: flex; align-items: center; gap: 8px; }
+        .card select { width: 100%; margin-bottom: 16px; }
+        .tag { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+        .tag-red { background: #fee2e2; color: #dc2626; }
+        .tag-yellow { background: #fef3c7; color: #d97706; }
+        .tag-green { background: #d1fae5; color: #059669; }
+        .tag-blue { background: #dbeafe; color: #2563eb; }
+        .source-item { padding: 12px; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 8px; }
+        .source-item h4 { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .source-item p { font-size: 13px; color: #6b7280; }
+        .source-item small { font-size: 11px; color: #9ca3af; }
+        .insight-card { border-left: 4px solid #2563eb; padding: 12px 16px; margin-bottom: 10px; background: #f8fafc; border-radius: 0 8px 8px 0; }
+        .insight-card.risk { border-left-color: #dc2626; }
+        .insight-card.opportunity { border-left-color: #059669; }
+        .insight-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+        .insight-card p { font-size: 12px; color: #4b5563; }
+        .next-action { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+        .next-action h4 { font-size: 14px; color: #166534; margin-bottom: 6px; }
+        .summary-box { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+        .summary-box p { font-size: 13px; line-height: 1.6; color: #374151; }
+        .data-badge { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 6px; font-size: 11px; background: #e5e7eb; margin-right: 4px; }
+        .full-width { grid-column: 1 / -1; }
+        @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
+        .status-open { background: #f59e0b; }
+        .status-closed { background: #10b981; }
+        .status-urgent { background: #ef4444; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Customer 360 Insight Tool</h1>
+            <p>Aggregates CRM, Support Ticket, and Email data into a unified customer view with risk signals and next actions</p>
+        </header>
+
+        <div class="controls">
+            <label style="font-weight:600;font-size:14px;">Select Customer:</label>
+            <select id="customerSelect" onchange="loadCustomer()">
+                <option value="">-- Choose a customer --</option>
+            </select>
+            <span id="customerCount" style="font-size:13px;color:#6b7280;"></span>
+        </div>
+
+        <div class="grid" id="customerView" style="display:none;">
+            <!-- Summary Card -->
+            <div class="card full-width">
+                <h2>📋 Account Summary</h2>
+                <div id="summaryContent" class="summary-box"></div>
+            </div>
+
+            <!-- CRM Data -->
+            <div class="card">
+                <h2>📊 CRM Data (Zoho)</h2>
+                <div id="crmContent"></div>
+            </div>
+
+            <!-- Support Tickets -->
+            <div class="card">
+                <h2>🎫 Support Tickets</h2>
+                <div id="ticketContent"></div>
+            </div>
+
+            <!-- Emails -->
+            <div class="card">
+                <h2>📧 Email History</h2>
+                <div id="emailContent"></div>
+            </div>
+
+            <!-- Insights & Risks -->
+            <div class="card">
+                <h2>⚠️ Signals & Risks</h2>
+                <div id="signalsContent"></div>
+            </div>
+
+            <!-- Next Best Action -->
+            <div class="card">
+                <h2>🎯 Next Best Action</h2>
+                <div id="actionContent"></div>
+            </div>
+        </div>
+
+        <div id="noSelection" style="text-align:center;padding:80px 20px;color:#9ca3af;">
+            <div style="font-size:64px;margin-bottom:16px;">👤</div>
+            <h3 style="color:#6b7280;">Select a customer to see their 360° view</h3>
+            <p style="margin-top:8px;">Data from CRM, Support Tickets, and Email History combined</p>
+        </div>
+    </div>
+
+    <script>
+        // ========================
+        // DUMMY DATA - 15 Customers from 3 Sources
+        // ========================
+        const crmData = [
+            { id: "C001", name: "Acme Corp", stage: "Negotiation", value: 120000, owner: "Priya S.", companySize: 250, industry: "SaaS", status: "Active", lastContact: "2026-07-05" },
+            { id: "C002", name: "Globex Inc", stage: "Proposal Sent", value: 85000, owner: "Rahul K.", companySize: 180, industry: "FinTech", status: "Active", lastContact: "2026-07-06" },
+            { id: "C003", name: "Initech", stage: "Closed Won", value: 200000, owner: "Priya S.", companySize: 400, industry: "Manufacturing", status: "Customer", lastContact: "2026-07-01" },
+            { id: "C004", name: "Umbrella Co", stage: "Discovery", value: 45000, owner: "Ankit M.", companySize: 60, industry: "Healthcare", status: "Lead", lastContact: "2026-07-07" },
+            { id: "C005", name: "Stark Industries", stage: "Closed Won", value: 500000, owner: "Rahul K.", companySize: 1000, industry: "Defense", status: "Customer", lastContact: "2026-07-02" },
+            { id: "C006", name: "Wayne Enterprises", stage: "Negotiation", value: 320000, owner: "Neha G.", companySize: 800, industry: "Technology", status: "Active", lastContact: "2026-07-06" },
+            { id: "C007", name: "Oscorp", stage: "Qualified", value: 75000, owner: "Ankit M.", companySize: 120, industry: "Biotech", status: "Active", lastContact: "2026-07-04" },
+            { id: "C008", name: "Cyberdyne Systems", stage: "Closed Lost", value: 95000, owner: "Priya S.", companySize: 90, industry: "AI/ML", status: "Lost", lastContact: "2026-06-28" },
+            { id: "C009", name: "Hooli", stage: "Proposal Sent", value: 160000, owner: "Neha G.", companySize: 300, industry: "Enterprise Software", status: "Active", lastContact: "2026-07-05" },
+            { id: "C010", name: "Dunder Mifflin", stage: "Closed Won", value: 35000, owner: "Rahul K.", companySize: 50, industry: "Office Supplies", status: "Customer", lastContact: "2026-07-03" },
+            { id: "C011", name: "Massive Dynamic", stage: "Discovery", value: 280000, owner: "Neha G.", companySize: 500, industry: "Pharmaceuticals", status: "Lead", lastContact: "2026-07-07" },
+            { id: "C012", name: "Pied Piper", stage: "Negotiation", value: 55000, owner: "Ankit M.", companySize: 30, industry: "Compression Tech", status: "Active", lastContact: "2026-07-06" },
+            { id: "C013", name: "Soylent Corp", stage: "Qualified", value: 110000, owner: "Priya S.", companySize: 200, industry: "Food Tech", status: "Active", lastContact: "2026-07-05" },
+            { id: "C014", name: "Tyrell Corp", stage: "Proposal Sent", value: 420000, owner: "Rahul K.", companySize: 600, industry: "Robotics", status: "Active", lastContact: "2026-07-04" },
+            { id: "C015", name: "Wonka Industries", stage: "Closed Won", value: 78000, owner: "Neha G.", companySize: 150, industry: "Food & Beverage", status: "Customer", lastContact: "2026-07-01" }
+        ];
+
+        const ticketData = [
+            { id: "TKT-101", customerName: "Acme Corp", issue: "Integration failure with Salesforce", priority: "High", status: "Open", created: "2026-07-04", agent: "Support-A" },
+            { id: "TKT-102", customerName: "Acme Corp", issue: "Billing discrepancy on invoice #4402", priority: "Urgent", status: "Open", created: "2026-07-06", agent: "Support-B" },
+            { id: "TKT-103", customerName: "Globex Inc", issue: "User permission error for finance team", priority: "Medium", status: "Open", created: "2026-07-05", agent: "Support-A" },
+            { id: "TKT-104", customerName: "Globex Inc", issue: "API rate limiting question", priority: "Low", status: "Closed", created: "2026-07-01", agent: "Support-C" },
+            { id: "TKT-105", customerName: "Initech", issue: "Feature request: bulk export", priority: "Low", status: "Closed", created: "2026-06-28", agent: "Support-B" },
+            { id: "TKT-106", customerName: "Stark Industries", issue: "SSO login not working", priority: "Urgent", status: "Open", created: "2026-07-06", agent: "Support-A" },
+            { id: "TKT-107", customerName: "Wayne Enterprises", issue: "Data migration support needed", priority: "High", status: "Open", created: "2026-07-05", agent: "Support-C" },
+            { id: "TKT-108", customerName: "Wayne Enterprises", issue: "Contract renewal terms question", priority: "Medium", status: "Open", created: "2026-07-06", agent: "Support-B" },
+            { id: "TKT-109", customerName: "Pied Piper", issue: "Cannot access dashboard after update", priority: "High", status: "Open", created: "2026-07-06", agent: "Support-A" },
+            { id: "TKT-110", customerName: "Hooli", issue: "Training request for new finance team", priority: "Low", status: "Closed", created: "2026-07-02", agent: "Support-C" },
+            { id: "TKT-111", customerName: "Oscorp", issue: "Compliance report generation failed", priority: "High", status: "Open", created: "2026-07-04", agent: "Support-B" },
+            { id: "TKT-112", customerName: "Soylent Corp", issue: "Payment gateway timeout errors", priority: "Medium", status: "Open", created: "2026-07-05", agent: "Support-A" },
+            { id: "TKT-113", customerName: "Tyrell Corp", issue: "Custom integration documentation", priority: "Low", status: "Closed", created: "2026-07-03", agent: "Support-C" },
+            { id: "TKT-114", customerName: "Massive Dynamic", issue: "Demo account setup", priority: "Low", status: "Closed", created: "2026-07-07", agent: "Support-A" },
+            { id: "TKT-115", customerName: "Acme Corp", issue: "Quarterly business review scheduling", priority: "Medium", status: "Open", created: "2026-07-07", agent: "Support-C" }
+        ];
+
+        const emailData = [
+            { id: "EM-001", customerName: "Acme Corp", from: "james@acmecorp.com", subject: "Concerned about recent billing changes", sentiment: "Negative", date: "2026-07-06" },
+            { id: "EM-002", customerName: "Acme Corp", from: "sarah@acmecorp.com", subject: "Pricing discussion for Q3 renewal", sentiment: "Neutral", date: "2026-07-05" },
+            { id: "EM-003", customerName: "Globex Inc", from: "mike@globex.com", subject: "Happy with new features, thank you!", sentiment: "Positive", date: "2026-07-04" },
+            { id: "EM-004", customerName: "Globex Inc", from: "mike@globex.com", subject: "Looking at expanding to 3 more departments", sentiment: "Positive", date: "2026-07-06" },
+            { id: "EM-005", customerName: "Initech", from: "bill@initech.com", subject: "Quarterly review feedback", sentiment: "Positive", date: "2026-07-01" },
+            { id: "EM-006", customerName: "Stark Industries", from: "tony@stark.com", subject: "URGENT: System down for 2 hours", sentiment: "Negative", date: "2026-07-06" },
+            { id: "EM-007", customerName: "Wayne Enterprises", from: "bruce@wayne.com", subject: "Project timeline concerns", sentiment: "Neutral", date: "2026-07-05" },
+            { id: "EM-008", customerName: "Wayne Enterprises", from: "lucius@wayne.com", subject: "Procurement process questions", sentiment: "Neutral", date: "2026-07-06" },
+            { id: "EM-009", customerName: "Pied Piper", from: "richard@piedpiper.com", subject: "Bug report: data sync issue", sentiment: "Negative", date: "2026-07-06" },
+            { id: "EM-010", customerName: "Hooli", from: "gavin@hooli.com", subject: "Partnership expansion opportunity", sentiment: "Positive", date: "2026-07-03" },
+            { id: "EM-011", customerName: "Oscorp", from: "harry@oscorp.com", subject: "Compliance certification needed", sentiment: "Neutral", date: "2026-07-04" },
+            { id: "EM-012", customerName: "Soylent Corp", from: "support@soylent.com", subject: "Payment processing issues", sentiment: "Negative", date: "2026-07-05" },
+            { id: "EM-013", customerName: "Dunder Mifflin", from: "michael@dundermifflin.com", subject: "Referral: 2 new clients interested", sentiment: "Positive", date: "2026-07-03" },
+            { id: "EM-014", customerName: "Massive Dynamic", from: "nina@massive.com", subject: "Initial discovery call follow-up", sentiment: "Positive", date: "2026-07-07" },
+            { id: "EM-015", customerName: "Pied Piper", from: "erlich@piedpiper.com", subject: "Investment opportunity discussion", sentiment: "Positive", date: "2026-07-05" }
+        ];
+
+        const slackNotesData = [
+            { id: "SN-001", customerName: "Acme Corp", from: "#sales", message: "Acme CFO mentioned frustration with current vendor lock-in", date: "2026-07-04" },
+            { id: "SN-002", customerName: "Wayne Enterprises", from: "#support", message: "Wayne's team seems stretched thin, may need onboarding help", date: "2026-07-05" },
+            { id: "SN-003", customerName: "Stark Industries", from: "#engineering", message: "Tony is personally involved, needs white-glove treatment", date: "2026-07-06" },
+            { id: "SN-004", customerName: "Globex Inc", from: "#sales", message: "Globex exploring enterprise plan, good up-sell signal", date: "2026-07-05" },
+            { id: "SN-005", customerName: "Acme Corp", from: "#product", message: "Acme power user — using 90% of premium features", date: "2026-07-03" }
+        ];
+
+        const customers = [...new Set([...crmData.map(c => c.name), ...ticketData.map(t => t.customerName), ...emailData.map(e => e.customerName)])].sort();
+
+        // Populate dropdown
+        const select = document.getElementById('customerSelect');
+        customers.forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            opt.textContent = name;
+            select.appendChild(opt);
+        });
+        document.getElementById('customerCount').textContent = `(${customers.length} customers)`;
+
+        function loadCustomer() {
+            const name = document.getElementById('customerSelect').value;
+            if (!name) {
+                document.getElementById('customerView').style.display = 'none';
+                document.getElementById('noSelection').style.display = 'block';
+                return;
+            }
+            document.getElementById('customerView').style.display = 'grid';
+            document.getElementById('noSelection').style.display = 'none';
+
+            const crm = crmData.find(c => c.name === name);
+            const tickets = ticketData.filter(t => t.customerName === name);
+            const emails = emailData.filter(e => e.customerName === name);
+            const slackNotes = slackNotesData.filter(s => s.customerName === name);
+
+            // --- Summary ---
+            const openTickets = tickets.filter(t => t.status === 'Open').length;
+            const urgentTickets = tickets.filter(t => t.priority === 'Urgent' && t.status === 'Open').length;
+            const negativeEmails = emails.filter(e => e.sentiment === 'Negative').length;
+            const positiveEmails = emails.filter(e => e.sentiment === 'Positive').length;
+            const totalValue = crm ? crm.value : 0;
+
+            let riskLevel = 'green';
+            let riskLabel = 'Healthy';
+            if (urgentTickets > 0 || negativeEmails > 0) { riskLevel = 'red'; riskLabel = 'At Risk'; }
+            else if (openTickets > 2) { riskLevel = 'yellow'; riskLabel = 'Needs Attention'; }
+
+            document.getElementById('summaryContent').innerHTML = `
+                <div style="display:flex;flex-wrap:wrap;gap:20px;">
+                    <div style="flex:2;min-width:200px;">
+                        <p><strong>${name}</strong></p>
+                        <p style="margin-top:8px;">
+                            <span class="tag tag-${riskLevel}" style="margin-right:8px;">${riskLabel}</span>
+                            ${crm ? `<span class="tag tag-blue">${crm.stage}</span>` : ''}
+                            ${crm ? `<span class="tag tag-blue">${crm.industry}</span>` : ''}
+                        </p>
+                        <p style="margin-top:12px;font-size:13px;">
+                            ${crm ? `<strong>Owner:</strong> ${crm.owner} · <strong>Deal Value:</strong> ₹${(crm.value/100).toFixed(1)}K · <strong>Last Contact:</strong> ${crm.lastContact}` : ''}
+                        </p>
+                    </div>
+                    <div style="flex:1;display:flex;gap:16px;">
+                        <div style="text-align:center;flex:1;background:#f3f4f6;padding:12px;border-radius:8px;">
+                            <div style="font-size:24px;font-weight:700;">${openTickets}</div>
+                            <div style="font-size:11px;color:#6b7280;">Open Tickets</div>
+                        </div>
+                        <div style="text-align:center;flex:1;background:#f3f4f6;padding:12px;border-radius:8px;">
+                            <div style="font-size:24px;font-weight:700;">${emails.length}</div>
+                            <div style="font-size:11px;color:#6b7280;">Emails</div>
+                        </div>
+                        <div style="text-align:center;flex:1;background:#f3f4f6;padding:12px;border-radius:8px;">
+                            <div style="font-size:24px;font-weight:700;">${crm ? crm.stage : 'N/A'}</div>
+                            <div style="font-size:11px;color:#6b7280;">Pipeline Stage</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            // --- CRM ---
+            document.getElementById('crmContent').innerHTML = crm ? `
+                <div class="source-item">
+                    <h4>${crm.name}</h4>
+                    <p><strong>Stage:</strong> ${crm.stage}</p>
+                    <p><strong>Deal Value:</strong> ₹${(crm.value/100).toFixed(1)}K</p>
+                    <p><strong>Owner:</strong> ${crm.owner}</p>
+                    <p><strong>Company Size:</strong> ${crm.companySize} employees</p>
+                    <p><strong>Industry:</strong> ${crm.industry}</p>
+                    <p><strong>Status:</strong> ${crm.status}</p>
+                    <p><strong>Last Contact:</strong> ${crm.lastContact}</p>
+                    <small>Source: Zoho CRM</small>
+                </div>
+            ` : '<p style="color:#9ca3af;font-size:13px;">No CRM data found for this customer.</p>';
+
+            // --- Tickets ---
+            document.getElementById('ticketContent').innerHTML = tickets.length > 0
+                ? tickets.map(t => `
+                    <div class="source-item">
+                        <h4>
+                            <span class="status-dot status-${t.status === 'Open' ? (t.priority === 'Urgent' ? 'urgent' : 'open') : 'closed'}"></span>
+                            ${t.issue}
+                        </h4>
+                        <p>
+                            <span class="tag tag-${t.priority === 'Urgent' ? 'red' : t.priority === 'High' ? 'yellow' : 'green'}">${t.priority}</span>
+                            <span class="tag tag-${t.status === 'Open' ? 'yellow' : 'green'}">${t.status}</span>
+                        </p>
+                        <p><strong>Created:</strong> ${t.created} · <strong>Agent:</strong> ${t.agent}</p>
+                        <small>Ticket: ${t.id}</small>
+                    </div>
+                `).join('')
+                : '<p style="color:#9ca3af;font-size:13px;">No support tickets found.</p>';
+
+            // --- Emails ---
+            document.getElementById('emailContent').innerHTML = emails.length > 0
+                ? emails.map(e => `
+                    <div class="source-item">
+                        <h4>${e.subject}</h4>
+                        <p>From: ${e.from}</p>
+                        <p>
+                            <span class="tag tag-${e.sentiment === 'Positive' ? 'green' : e.sentiment === 'Negative' ? 'red' : 'yellow'}">${e.sentiment}</span>
+                            <small>${e.date}</small>
+                        </p>
+                        <small>${e.id}</small>
+                    </div>
+                `).join('')
+                : '<p style="color:#9ca3af;font-size:13px;">No emails found.</p>';
+
+            // --- Signals & Risks ---
+            const signals = [];
+
+            if (urgentTickets > 0) signals.push({ type: 'risk', title: `🔴 ${urgentTickets} Urgent open ticket(s)`, desc: `Customer has ${urgentTickets} urgent unresolved issue(s) that need immediate attention.` });
+            if (openTickets > 2) signals.push({ type: 'risk', title: '⚠️ High open ticket volume', desc: `${openTickets} open tickets suggest potential dissatisfaction or product friction.` });
+            if (negativeEmails > 0) signals.push({ type: 'risk', title: '📉 Negative email sentiment detected', desc: `${negativeEmails} email(s) show customer frustration. May indicate churn risk.` });
+            if (crm && crm.stage === 'Closed Lost') signals.push({ type: 'risk', title: '❌ Deal lost', desc: `This opportunity was lost. Consider reaching out for feedback or re-engagement in 90 days.` });
+            if (positiveEmails > positiveEmails) signals.push({ type: 'opportunity', title: '✅ Strong positive engagement', desc: `Customer is sending positive signals. Good time for up-sell or referral request.` });
+            if (crm && crm.value > 200000) signals.push({ type: 'opportunity', title: '💰 High-value account', desc: `Account valued at ₹${(crm.value/100).toFixed(1)}K. Assign senior team member and schedule exec check-in.` });
+            if (slackNotes.length > 0) signals.push({ type: 'opportunity', title: '💬 Slack intelligence available', desc: slackNotes.map(s => `"${s.message}" — from ${s.from}`).join('<br>') });
+            if (crm && crm.stage === 'Negotiation') signals.push({ type: 'opportunity', title: '🤝 In negotiation phase', desc: `Customer is in active negotiation. Ensure all open tickets are resolved before closing.` });
+            if (emails.some(e => e.subject.toLowerCase().includes('expand') || e.subject.toLowerCase().includes('referral'))) signals.push({ type: 'opportunity', title: '🚀 Expansion signal detected', desc: `Customer emails mention expansion or referral. Reach out to discuss growth opportunities.` });
+
+            if (signals.length === 0) signals.push({ type: 'opportunity', title: '✅ No significant risks', desc: 'Account appears healthy. Maintain regular touchpoints.' });
+
+            document.getElementById('signalsContent').innerHTML = signals.map(s => `
+                <div class="insight-card ${s.type}">
+                    <h4>${s.title}</h4>
+                    <p>${s.desc}</p>
+                </div>
+            `).join('');
+
+            // --- Next Best Action ---
+            let actions = [];
+
+            if (urgentTickets > 0) actions.push({ priority: '🔴 HIGH', action: `Call customer immediately about urgent ticket #${tickets.find(t => t.priority === 'Urgent' && t.status === 'Open').id}.`, reason: 'Urgent tickets are a churn risk.' });
+            if (negativeEmails > 0) actions.push({ priority: '🟡 MEDIUM', action: 'Schedule a check-in call with the customer to address concerns raised in recent emails.', reason: 'Negative sentiment needs proactive outreach.' });
+            if (crm && crm.stage === 'Negotiation') actions.push({ priority: '🔴 HIGH', action: `Prepare final proposal with pricing. Resolve all open tickets before sending.`, reason: 'Customer is in late-stage negotiation.' });
+            if (crm && crm.stage === 'Discovery') actions.push({ priority: '🟡 MEDIUM', action: 'Send personalized demo based on industry (${crm.industry}). Schedule follow-up for next week.', reason: 'Early stage — build momentum.' });
+            if (crm && crm.stage === 'Proposal Sent') actions.push({ priority: '🟡 MEDIUM', action: 'Follow up on proposal. Share relevant case studies from ${crm.industry} industry.', reason: 'Proposal sent — keep engagement active.' });
+            if (crm && crm.stage === 'Qualified') actions.push({ priority: '🟢 LOW', action: 'Schedule product deep-dive tailored to ${crm.industry} use cases.', reason: 'Qualified lead — move toward proposal.' });
+            if (openTickets > 0 && urgentTickets === 0) actions.push({ priority: '🟢 LOW', action: 'Review open tickets and prioritize with support team for closure this week.', reason: 'Reducing ticket backlog improves satisfaction.' });
+            if (emails.some(e => e.subject.toLowerCase().includes('referral'))) actions.push({ priority: '🟡 MEDIUM', action: 'Follow up on referral leads mentioned in email. Send thank you note.', reason: 'Referrals are high-conversion opportunities.' });
+            if (slackNotes.some(s => s.message.toLowerCase().includes('upsell') || s.message.toLowerCase().includes('enterprise'))) actions.push({ priority: '🟡 MEDIUM', action: 'Prepare enterprise up-sell proposal based on Slack intelligence about expansion signal.', reason: 'Internal chatter indicates expansion interest.' });
+
+            if (actions.length === 0) actions.push({ priority: '🟢 LOW', action: 'Schedule regular health check-in. No urgent actions required.', reason: 'Account is stable.' });
+
+            document.getElementById('actionContent').innerHTML = actions.slice(0, 3).map(a => `
+                <div class="next-action">
+                    <h4>${a.priority}</h4>
+                    <p style="font-size:13px;color:#374151;"><strong>Action:</strong> ${a.action}</p>
+                    <p style="font-size:12px;color:#6b7280;margin-top:4px;"><strong>Why:</strong> ${a.reason}</p>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>

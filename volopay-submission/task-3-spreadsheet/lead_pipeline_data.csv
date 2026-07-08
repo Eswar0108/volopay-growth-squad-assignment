@@ -1,0 +1,26 @@
+Lead ID,Lead Name,Company,Lead Source,Channel,Date Received,Assigned To,Stage,Deal Value (₹),Priority,Follow-Up Date,Last Contacted,Notes
+LD-001,Ravi Sharma,Acme Corp,Website,Organic Search,2026-07-01,Priya S.,Qualified,150000,High,2026-07-08,2026-07-04,Interested in enterprise plan
+LD-002,Ananya Patel,Globex Inc,Referral,Word of Mouth,2026-07-01,Rahul K.,Proposal Sent,85000,Medium,2026-07-09,2026-07-05,Referred by existing customer
+LD-003,Vikram Singh,Initech,LinkedIn,Social Media,2026-07-01,Priya S.,Closed Won,200000,High,2026-07-02,2026-07-01,Contract signed - Q3 start
+LD-004,Pooja Reddy,Umbrella Co,Email Campaign,Email,2026-07-02,Ankit M.,Discovery,45000,Low,2026-07-12,2026-07-07,Initial call completed
+LD-005,Arun Kumar,Stark Industries,Website,Organic Search,2026-07-02,Rahul K.,Closed Won,500000,High,2026-07-03,2026-07-02,Enterprise deal - 3 year term
+LD-006,Neha Gupta,Wayne Enterprises,Conference,Event,2026-07-02,Neha G.,Negotiation,320000,High,2026-07-10,2026-07-06,Pricing discussion in progress
+LD-007,Rahul Verma,Oscorp,LinkedIn,Social Media,2026-07-03,Ankit M.,Qualified,75000,Medium,2026-07-10,2026-07-04,Compliance requirements discussed
+LD-008,Sneha Joshi,Cyberdyne Systems,Website,Organic Search,2026-07-03,Priya S.,Closed Lost,95000,Low,2026-07-05,2026-06-28,Chose competitor - follow up in 90 days
+LD-009,Amit Desai,Hooli,Referral,Word of Mouth,2026-07-03,Neha G.,Proposal Sent,160000,High,2026-07-10,2026-07-05,Needs board approval
+LD-010,Deepa Nair,Dunder Mifflin,Email Campaign,Email,2026-07-04,Rahul K.,Closed Won,35000,Low,2026-07-05,2026-07-03,Small deal - quick close
+LD-011,Kiran Rao,Massive Dynamic,Website,Organic Search,2026-07-04,Neha G.,Discovery,280000,High,2026-07-14,2026-07-07,Discovery call scheduled
+LD-012,Manoj Tiwari,Pied Piper,Conference,Event,2026-07-04,Ankit M.,Negotiation,55000,Medium,2026-07-11,2026-07-06,Tech evaluation done - pricing stage
+LD-013,Divya Kaur,Soylent Corp,LinkedIn,Social Media,2026-07-05,Priya S.,Qualified,110000,Medium,2026-07-12,2026-07-05,Payment integration concern raised
+LD-014,Faisal Ali,Tyrell Corp,Email Campaign,Email,2026-07-05,Rahul K.,Proposal Sent,420000,High,2026-07-12,2026-07-04,Multi-department evaluation
+LD-015,Priyanka Chopra,Wonka Industries,Referral,Word of Mouth,2026-07-05,Neha G.,Closed Won,78000,Low,2026-07-06,2026-07-01,Quick win - happy customer
+LD-016,Sandeep Reddy,Acme Corp,Website,Organic Search,2026-07-06,Priya S.,Negotiation,120000,High,2026-07-13,2026-07-05,Second deal - expansion opportunity
+LD-017,Lakshmi Iyer,Globex Inc,LinkedIn,Social Media,2026-07-06,Rahul K.,Qualified,95000,Medium,2026-07-13,2026-07-06,New contact from same company
+LD-018,Rajesh Khanna,Umbrella Co,Email Campaign,Email,2026-07-06,Ankit M.,Discovery,35000,Low,2026-07-16,2026-07-07,Small pilot opportunity
+LD-019,Meera Nambiar,Acme Corp,Referral,Word of Mouth,2026-07-07,Priya S.,Qualified,180000,High,2026-07-14,2026-07-07,Referral from existing contact
+LD-020,Vivek Oberoi,Hooli,Conference,Event,2026-07-07,Neha G.,Discovery,130000,Medium,2026-07-17,2026-07-07,Met at FinTech summit - interested
+LD-021,Sonia Gandhi,Wayne Enterprises,Website,Organic Search,2026-07-07,Neha G.,Qualified,75000,Medium,2026-07-14,2026-07-06,Departmental need identified
+LD-022,Ajay Devgn,Stark Industries,Email Campaign,Email,2026-07-07,Rahul K.,Proposal Sent,60000,Medium,2026-07-14,2026-07-06,Additional use case discovered
+LD-023,Katrina Kaif,Oscorp,Referral,Word of Mouth,2026-07-07,Ankit M.,Discovery,85000,Low,2026-07-17,2026-07-07,Referred by partner - initial contact
+LD-024,Salman Khan,Pied Piper,LinkedIn,Social Media,2026-07-07,Ankit M.,Proposal Sent,55000,Medium,2026-07-14,2026-07-06,Following up on demo
+LD-025,Deepika Padukone,Massive Dynamic,Website,Organic Search,2026-07-07,Neha G.,Qualified,220000,High,2026-07-14,2026-07-07,Large potential - multiple departments
