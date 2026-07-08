@@ -164,9 +164,9 @@ pdf.cell(col_w[3], 7, 'Core Topic', border=1, align='C', fill=True, new_x="LMARG
 
 pdf.set_text_color(40, 40, 40)
 rows = [
-    ['1', 'Post 1', 'AP teams, Controllers', 'Cost of manual AP processing & strategic reframe'],
-    ['2', 'Post 2', 'CFOs, FP&A', 'Leading Burn Ratio as predictive metric'],
-    ['3', 'Post 3', 'Finance Ops, RevOps', 'Post-sale payment acceleration tactics'],
+    ['1', 'Post 1', 'AP teams, Controllers', 'Manual AP cost & strategic reframe'],
+    ['2', 'Post 2', 'CFOs, FP&A', 'Leading Burn Ratio metric'],
+    ['3', 'Post 3', 'Finance Ops, RevOps', 'Payment acceleration tactics'],
 ]
 for i, row in enumerate(rows):
     pdf.set_font('Helvetica', '', 9)

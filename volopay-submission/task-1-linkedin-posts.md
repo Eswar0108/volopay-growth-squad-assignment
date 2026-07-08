@@ -120,8 +120,8 @@ And sometimes the biggest improvement isn't a new tool. It's a new conversation.
 
 | Post | Target Audience | Core Topic |
 |------|----------------|------------|
-| Post 1 | AP teams, Controllers | Cost of manual AP processing and strategic reframe |
-| Post 2 | CFOs, FP&A | Leading Burn Ratio as a predictive metric |
-| Post 3 | Finance Ops, RevOps | Post-sale payment acceleration tactics |
+| Post 1 | AP teams, Controllers | Manual AP cost & strategic reframe |
+| Post 2 | CFOs, FP&A | Leading Burn Ratio metric |
+| Post 3 | Finance Ops, RevOps | Payment acceleration tactics |
 
 These posts are designed to feel practical, relatable, and useful — not promotional. Each one addresses a real pain point finance professionals encounter daily, offers a fresh framing or actionable tip, and invites engagement through a closing question.
