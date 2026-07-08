@@ -175,9 +175,10 @@ for i, row in enumerate(rows):
     else:
         pdf.set_fill_color(255, 255, 255)
     for j, cell in enumerate(row):
-        pdf.cell(col_w[j], 7, cell, border=1, align='C' if j == 0 else 'L', fill=True)
-    pdf.new_x = "LMARGIN"
-    pdf.new_y = "NEXT"
+        if j == len(row) - 1:
+            pdf.cell(col_w[j], 7, cell, border=1, align='C' if j == 0 else 'L', fill=True, new_x="LMARGIN", new_y="NEXT")
+        else:
+            pdf.cell(col_w[j], 7, cell, border=1, align='C' if j == 0 else 'L', fill=True)
 
 output_path = '/Users/tejeswarreddy/Downloads/ROR Challange/volopay-submission/task-1-linkedin-posts.pdf'
 pdf.output(output_path)
