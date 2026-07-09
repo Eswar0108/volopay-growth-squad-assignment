@@ -235,6 +235,12 @@
         });
         document.getElementById('customerCount').textContent = `(${customers.length} customers)`;
 
+        // Auto-load first customer for instant demo
+        setTimeout(() => {
+            select.value = 'Acme Corp';
+            loadCustomer();
+        }, 100);
+
         function loadCustomer() {
             const name = document.getElementById('customerSelect').value;
             if (!name) {
